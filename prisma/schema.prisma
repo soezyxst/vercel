@@ -1,0 +1,340 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DATABASE_URL_NON_POOLING")
+}
+
+enum Role {
+    USER
+    ADMIN
+    SUPERADMIN
+}
+
+enum AnnouncementType {
+    ACADEMIC
+    ORGANIZATION
+}
+
+enum QuestionStatus {
+    ANSWERED
+    UNANSWERED
+}
+
+enum Subject {
+    KINDIN
+    ANTEKDAS
+    MKM
+    KWN
+    AGAMA
+    TERMO
+    MATEK
+    PTM
+    GAMSIN
+}
+
+enum ContentType {
+    Material
+    Problem
+    Solution
+    Recording
+}
+
+enum AttendanceStatus {
+    Present
+    Permitted
+}
+
+model User {
+    id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    nim          String   @unique
+    passwordHash String   @db.Text
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @default(now()) @updatedAt
+    role         Role     @default(USER)
+    profile      Profile?
+
+    questions            Question[]
+    answers              Answer[]
+    link                 Link[]
+    vote                 Vote[]
+    task                 Task[]
+    announcement         Announcement[]
+    activity             Activity[]
+    attendance           Attendance[]
+    exam                 Exam[]
+    subjectContent       SubjectContent[]
+    tryOut               TryOut[]
+    tryOutProblem        TryOutProblem[]
+    tryOutSubmission     TryOutSubmission[]
+    attendanceSubmission AttendanceSubmission[]
+}
+
+model Profile {
+    id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    name      String
+    email     String?  @unique
+    image     String?
+    prodi     String?
+    points    Int      @default(0)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+    userId    String   @unique @db.Uuid
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Question {
+    id        String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    title     String
+    content   String
+    status    QuestionStatus @default(UNANSWERED)
+    filePath  String?
+    createdAt DateTime       @default(now())
+    updatedAt DateTime       @default(now()) @updatedAt
+    author    User?          @relation(fields: [authorId], references: [id])
+    authorId  String?        @db.Uuid
+    votes     Vote[]
+    answers   Answer[]
+}
+
+model Answer {
+    id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    content    String
+    filePath   String?
+    createdAt  DateTime  @default(now())
+    updatedAt  DateTime  @default(now()) @updatedAt
+    author     User?     @relation(fields: [authorId], references: [id])
+    authorId   String?   @db.Uuid
+    question   Question? @relation(fields: [questionId], references: [id])
+    questionId String?   @db.Uuid
+    votes      Vote[]
+}
+
+model Vote {
+    id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    createdAt  DateTime  @default(now())
+    updatedAt  DateTime  @default(now()) @updatedAt
+    author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    authorId   String    @db.Uuid
+    answer     Answer?   @relation(fields: [answerId], references: [id], onDelete: Cascade)
+    answerId   String?   @db.Uuid
+    question   Question? @relation(fields: [questionId], references: [id], onDelete: Cascade)
+    questionId String?   @db.Uuid
+
+    @@unique([authorId, answerId])
+    @@unique([authorId, questionId])
+}
+
+model Link {
+    id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    title       String
+    url         String
+    description String   @default("")
+    date        DateTime
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @default(now()) @updatedAt
+    author      User?    @relation(fields: [authorId], references: [id])
+    authorId    String?  @db.Uuid
+}
+
+model Exam {
+    id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    title       String
+    date        DateTime
+    description String   @default("")
+    filePath    String?
+    type        Subject
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @default(now()) @updatedAt
+    author      User?    @relation(fields: [authorId], references: [id])
+    authorId    String?  @db.Uuid
+}
+
+model TryOut {
+    id               String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    title            String
+    description      String             @default("")
+    type             Subject
+    startTime        DateTime           @db.Timestamp(3)
+    endTime          DateTime           @db.Timestamp(3)
+    createdAt        DateTime           @default(now())
+    updatedAt        DateTime           @default(now()) @updatedAt
+    author           User?              @relation(fields: [authorId], references: [id])
+    authorId         String?            @db.Uuid
+    tryOutProblem    TryOutProblem[]
+    tryOutSubmission TryOutSubmission[]
+}
+
+model TryOutProblem {
+    id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    title     String
+    content   String
+    filePath  String?
+    solution  String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+    author    User?    @relation(fields: [authorId], references: [id])
+    authorId  String?  @db.Uuid
+    tryOut    TryOut   @relation(fields: [tryOutId], references: [id], onDelete: Cascade)
+    tryOutId  String   @db.Uuid
+}
+
+model TryOutSubmission {
+    id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    score     Int      @default(0)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+    author    User?    @relation(fields: [authorId], references: [id])
+    authorId  String?  @db.Uuid
+    tryOut    TryOut   @relation(fields: [tryOutId], references: [id], onDelete: Cascade)
+    tryOutId  String   @db.Uuid
+}
+
+model Task {
+    id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    title       String
+    deadline    DateTime @db.Timestamp(3)
+    filePath    String?
+    description String   @default("")
+    type        Subject
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @default(now()) @updatedAt
+    author      User?    @relation(fields: [authorId], references: [id])
+    authorId    String?  @db.Uuid
+}
+
+model Announcement {
+    id        String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    title     String
+    content   String
+    date      DateTime
+    filePath  String?
+    type      AnnouncementType @default(ACADEMIC)
+    createdAt DateTime         @default(now())
+    updatedAt DateTime         @default(now()) @updatedAt
+    author    User?            @relation(fields: [authorId], references: [id])
+    authorId  String?          @db.Uuid
+}
+
+model SubjectContent {
+    id        String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    title     String
+    content   String
+    filePath  String?
+    url       String?
+    subject   Subject
+    type      ContentType
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @default(now()) @updatedAt
+    author    User?       @relation(fields: [authorId], references: [id])
+    authorId  String?     @db.Uuid
+}
+
+model Activity {
+    id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    title         String
+    content       String
+    startTime     DateTime    @default(now()) @db.Timestamp(3)
+    endTime       DateTime    @default(now()) @db.Timestamp(3)
+    location      String
+    filePath      String?
+    documentation String?
+    kuorum        Int         @default(193)
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @default(now()) @updatedAt
+    author        User?       @relation(fields: [authorId], references: [id])
+    authorId      String?     @db.Uuid
+    atttendance   Attendance?
+}
+
+model Attendance {
+    id                   String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    startTime            DateTime               @db.Timestamp(3)
+    endTime              DateTime               @db.Timestamp(3)
+    createdAt            DateTime               @default(now())
+    updatedAt            DateTime               @default(now()) @updatedAt
+    author               User?                  @relation(fields: [authorId], references: [id])
+    authorId             String?                @db.Uuid
+    activity             Activity               @relation(fields: [activityId], references: [id], onDelete: Cascade)
+    activityId           String                 @unique @db.Uuid
+    attendanceSubmission AttendanceSubmission[]
+}
+
+model AttendanceSubmission {
+    id           String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    status       AttendanceStatus
+    permission   Permission?
+    createdAt    DateTime         @default(now())
+    updatedAt    DateTime         @default(now()) @updatedAt
+    author       User?            @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    authorId     String?          @db.Uuid
+    attendance   Attendance       @relation(fields: [attendanceId], references: [id], onDelete: Cascade)
+    attendanceId String           @db.Uuid
+
+    @@unique([authorId, attendanceId])
+}
+
+model Permission {
+    id           String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    type         String
+    content      String
+    filePath     String?
+    submissionId String               @unique @db.Uuid
+    submission   AttendanceSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+    createdAt    DateTime             @default(now())
+    updatedAt    DateTime             @default(now()) @updatedAt
+}
+
+model BikeUser {
+    id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    nim          String         @unique
+    name         String
+    email        String
+    active       Boolean
+    passwordHash String
+    token        BikeToken[]
+    bike         Bike[]
+    createdAt    DateTime       @default(now())
+    updatedAt    DateTime       @default(now()) @updatedAt
+    bikeRelation BikeRelation[]
+
+    @@unique([nim, email])
+}
+
+model BikeToken {
+    id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    token        String         @unique
+    createdAt    DateTime       @default(now())
+    updatedAt    DateTime       @default(now()) @updatedAt
+    bikeUser     BikeUser?      @relation(fields: [bikeUserId], references: [id])
+    bikeUserId   String?        @db.Uuid
+    bikeRelation BikeRelation[]
+
+    @@unique([bikeUserId, token])
+}
+
+model Bike {
+    id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    number       Int            @unique
+    createdAt    DateTime       @default(now())
+    updatedAt    DateTime       @default(now()) @updatedAt
+    bikeUser     BikeUser[]     
+    bikeRelation BikeRelation[]
+}
+
+model BikeRelation {
+    id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    createdAt  DateTime   @default(now())
+    updatedAt  DateTime   @default(now()) @updatedAt
+    bikeUser   BikeUser?  @relation(fields: [bikeUserId], references: [id])
+    bikeUserId String?    @db.Uuid
+    bike       Bike?      @relation(fields: [bikeId], references: [id])
+    bikeId     String?    @db.Uuid
+    token      BikeToken? @relation(fields: [tokenId], references: [id])
+    tokenId    String?    @db.Uuid
+
+    @@unique([bikeUserId, bikeId])
+}
