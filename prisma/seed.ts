@@ -221,44 +221,44 @@ for (let i = 0; i < 10000; i++) {
 const bikes = [1, 2, 3, 4, 5, 6]
 
 async function main() {
-  await Promise.all(
-    ms.map(async (m) => {
-      return await prisma.user.create({
-        data: {
-          nim: m.NIM.toString(),
-          passwordHash: await hash(m.NIM.toString(), 10),
-          role: Role.USER,
-          profile: {
-            create: {
-              name: m.Nama,
-              prodi: "Teknik Mesin",
-            },
-          },
-        },
-      });
-    }
-    )
-  );
-
   // await Promise.all(
-  //   tokens.map(async (token) => {
-  //     return await prisma.bikeToken.create({
+  //   ms.map(async (m) => {
+  //     return await prisma.user.create({
   //       data: {
-  //         token: token,
-  //       }
-  //     })
-  //   })
-  // )
+  //         nim: m.NIM.toString(),
+  //         passwordHash: await hash(m.NIM.toString(), 10),
+  //         role: Role.USER,
+  //         profile: {
+  //           create: {
+  //             name: m.Nama,
+  //             prodi: "Teknik Mesin",
+  //           },
+  //         },
+  //       },
+  //     });
+  //   }
+  //   )
+  // );
 
   await Promise.all(
-    bikes.map(async (bike) => {
-      return await prisma.bike.create({
+    tokens.map(async (token) => {
+      return await prisma.bikeToken.create({
         data: {
-          number: bike,
+          token: token,
         }
       })
     })
   )
+
+//   await Promise.all(
+//     bikes.map(async (bike) => {
+//       return await prisma.bike.create({
+//         data: {
+//           number: bike,
+//         }
+//       })
+//     })
+//   )
 }
 
 main()
