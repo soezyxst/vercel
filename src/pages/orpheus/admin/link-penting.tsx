@@ -10,26 +10,23 @@ import {
 } from "@chakra-ui/react";
 import { Role } from '@prisma/client';
 import { useState } from "react";
-import CreateAnnouncementForm from "~/components/form/CreateAnnouncementForm";
-import UpdateAnnouncementForm from "~/components/form/UpdateAnnouncementForm";
+import CreateLinkForm from "~/components/form/CreateLinkForm";
+import UpdateLinkForm from "~/components/form/UpdateLinkForm";
 import LoadingPage from '~/components/loading/Loading';
 import AkaLayout from "~/layouts/AkaLayout";
 import { api } from "~/utils/api";
 
-const Informasi = () => {
+const LinkPenting = () => {
   const toast = useToast();
   const [activeKey, setActiveKey] = useState<string | undefined>(undefined);
-
-  const announcementForm = useDisclosure();
-  const updateAnnouncementForm = useDisclosure();
-  const announcementsTitle = api.announcement.getAnnouncementsTitle.useQuery({
-    type: "all",
-  });
-  const deleteAnnouncement = api.announcement.deleteAnnouncement.useMutation({
+  const linkForm = useDisclosure();
+  const updateLinkForm = useDisclosure();
+  const linksTitle = api.link.getLinkPentingsTitle.useQuery({ type: "all" });
+  const deleteLink = api.link.deleteLinkPenting.useMutation({
     onSuccess: async () => {
-      await announcementsTitle.refetch();
+      await linksTitle.refetch();
       toast({
-        title: "Announcement deleted",
+        title: "Link deleted",
         status: "success",
         duration: 2000,
         isClosable: true,
@@ -48,24 +45,21 @@ const Informasi = () => {
     },
   });
   return (
-    <AkaLayout title="Admin - Info" activeKey="Admin">
-      <Heading fontSize={{ base: "lg", md: "3xl" }}>Informasi</Heading>
+    <AkaLayout title="Admin - Link Penting" activeKey="Admin">
+      <Heading fontSize={{ base: "lg", md: "3xl" }}>Link</Heading>
       <Button
-        onClick={announcementForm.onOpen}
+        onClick={linkForm.onOpen}
         width="12rem"
         colorScheme="linkedin"
       >
-        Tambah Informasi
+        Tambah Link Penting
       </Button>
-      <CreateAnnouncementForm
-        {...announcementForm}
-        refetch={announcementsTitle.refetch}
-      />
+      <CreateLinkForm {...linkForm} refetch={linksTitle.refetch} />
       <VStack align="flex-start" spacing={2}>
-        {announcementsTitle.data?.map((announcement, index) => (
+        {linksTitle.data?.linkPenting.map((link, index) => (
           <>
             <Flex
-              key={announcement.id}
+              key={link.id}
               padding=".25rem"
               justifyContent="space-between"
               alignItems="center"
@@ -75,43 +69,37 @@ const Informasi = () => {
                 textTransform="capitalize"
                 fontSize={{ base: "sm", md: "md" }}
               >
-                {announcement.title}
+                {link.title}
               </Text>
               <Flex gap=".5rem">
                 <Button
                   colorScheme="red"
-                  isDisabled={deleteAnnouncement.isLoading}
-                  isLoading={
-                    deleteAnnouncement.isLoading &&
-                    activeKey === announcement.id
-                  }
+                  isDisabled={deleteLink.isLoading}
+                  isLoading={deleteLink.isLoading && activeKey === link.id}
                   loadingText="Deleting..."
                   onClick={() => {
-                    setActiveKey(announcement.id);
-                    deleteAnnouncement.mutate({ id: announcement.id });
+                    setActiveKey(link.id);
+                    deleteLink.mutate({ id: link.id });
                   }}
                 >
                   Delete
                 </Button>
                 <Button
+                  isDisabled={deleteLink.isLoading}
                   colorScheme="whatsapp"
                   onClick={() => {
-                    updateAnnouncementForm.onOpen();
-                    setActiveKey(announcement.id);
+                    updateLinkForm.onOpen();
+                    setActiveKey(link.id);
                   }}
-                  isDisabled={deleteAnnouncement.isLoading}
                 >
                   Edit
                 </Button>
-                <UpdateAnnouncementForm
-                  isOpen={
-                    updateAnnouncementForm.isOpen &&
-                    activeKey === announcement.id
-                  }
-                  onClose={updateAnnouncementForm.onClose}
-                  onOpen={updateAnnouncementForm.onOpen}
-                  refetch={announcementsTitle.refetch}
-                  id={announcement.id}
+                <UpdateLinkForm
+                  id={link.id}
+                  isOpen={updateLinkForm.isOpen && activeKey === link.id}
+                  onClose={updateLinkForm.onClose}
+                  onOpen={updateLinkForm.onOpen}
+                  refetch={linksTitle.refetch}
                 />
               </Flex>
             </Flex>
@@ -123,10 +111,9 @@ const Informasi = () => {
   );
 };
 
-Informasi.auth = {
+LinkPenting.auth = {
   role: Role.ADMIN || Role.SUPERADMIN,
   loading: <LoadingPage />,
-  unauthorized: "/ms22",
+  unauthorized: "/orpheus",
 };
-
-export default Informasi;
+export default LinkPenting;

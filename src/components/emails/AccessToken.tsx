@@ -10,7 +10,7 @@ import {
   Text,
 } from "@react-email/components";
 import * as React from "react";
-import { type SepedaProps } from "~/pages/ms22/sepeda/register";
+import { type SepedaProps } from "~/pages/orpheus/sepeda/register";
 
 const baseUrl = process.env.LOGO_URL ?? "";
 

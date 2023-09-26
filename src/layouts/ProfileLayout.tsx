@@ -50,11 +50,11 @@ const ProfileLayout = ({ activeKey, title, children }: ProfileLayoutProps) => {
   }, [router, status]);
 
   const linkRedirect = [
-    "/ms22/beranda",
-    "/ms22/profil",
-    "/ms22/profil/ganti-password",
-    "/ms22/profil/kehadiran",
-    "/ms22/profil/pengaturan",
+    "/orpheus/beranda",
+    "/orpheus/profil",
+    "/orpheus/profil/ganti-password",
+    "/orpheus/profil/kehadiran",
+    "/orpheus/profil/pengaturan",
   ];
 
   const Sidebar = () => (

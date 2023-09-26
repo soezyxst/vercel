@@ -55,7 +55,7 @@ const Id = () => {
               <Text>{": " + data?.profile?.prodi}</Text>
             </VStack>
           </Flex>
-          <Link href={"/ms22/profil/edit"} width="min-content">
+          <Link href={"/orpheus/profil/edit"} width="min-content">
             <Button leftIcon={<FiEdit />} width="fit-content">
               Edit
             </Button>

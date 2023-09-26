@@ -84,7 +84,7 @@ const Login = ({
     }
 
     handleLoggedIn();
-    void router.push('/ms22/sepeda/' + data.nim)
+    void router.push('/orpheus/sepeda/' + data.nim)
     reset();
   };
 

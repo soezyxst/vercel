@@ -211,30 +211,34 @@ function generateToken(n: number) {
 const tokens: string[] = []
 
 for (let i = 0; i < 10000; i++) {
-  tokens.push(generateToken(16))
+  let token = generateToken(16)
+  while (tokens.includes(token)) {
+    token = generateToken(16)
+  }
+  tokens.push(token)
 }
 
 const bikes = [1, 2, 3, 4, 5, 6]
 
 async function main() {
-  // await Promise.all(
-  //   ms.map(async (m) => {
-  //     return await prisma.user.create({
-  //       data: {
-  //         nim: m.NIM.toString(),
-  //         passwordHash: await hash(m.NIM.toString(), 10),
-  //         role: Role.USER,
-  //         profile: {
-  //           create: {
-  //             name: m.Nama,
-  //             prodi: "Teknik Mesin",
-  //           },
-  //         },
-  //       },
-  //     });
-  //   }
-  //   )
-  // );
+  await Promise.all(
+    ms.map(async (m) => {
+      return await prisma.user.create({
+        data: {
+          nim: m.NIM.toString(),
+          passwordHash: await hash(m.NIM.toString(), 10),
+          role: Role.USER,
+          profile: {
+            create: {
+              name: m.Nama,
+              prodi: "Teknik Mesin",
+            },
+          },
+        },
+      });
+    }
+    )
+  );
 
   // await Promise.all(
   //   tokens.map(async (token) => {

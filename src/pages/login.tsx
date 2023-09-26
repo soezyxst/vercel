@@ -41,7 +41,7 @@ const Login = ({
   } = useForm<AdminFormValues>();
 
   const handleRedirect = () => {
-    void router.push("/ms22/beranda");
+    void router.push("/orpheus/beranda");
   };
 
   const handleLoggedIn = () => {

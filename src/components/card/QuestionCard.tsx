@@ -119,7 +119,7 @@ const QuestionCard = ({
     <Card variant="outline" height="fit-content">
       <CardHeader>
         <Flex justifyContent="space-between">
-          <Link href={`/ms22/tanya-pr/${id}`} height="100%" width="100%">
+          <Link href={`/orpheus/tanya-soal/${id}`} height="100%" width="100%">
             <Heading size="md" textTransform="capitalize" flexGrow="1">
               {title}
             </Heading>
@@ -146,7 +146,7 @@ const QuestionCard = ({
         <Text mb=".5rem" whiteSpace="pre-line">
           {content}
         </Text>
-        <Flex flexWrap='wrap' gap='.5rem'>
+        <Flex flexWrap="wrap" gap=".5rem">
           {filePath
             ? filePath
                 .split(",")

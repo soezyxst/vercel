@@ -59,7 +59,7 @@ const ProfileMenu = () => {
       </MenuButton>
       {status === "authenticated" ? (
         <MenuList>
-          <Link href={"/ms22/profil/"}>
+          <Link href={"/orpheus/profil/"}>
             <MenuItem>
               <Flex alignItems="center" gap=".5rem">
                 <FiUserCheck />
@@ -67,7 +67,7 @@ const ProfileMenu = () => {
               </Flex>
             </MenuItem>
           </Link>
-          <Link href={"/ms22/profil/ganti-password"}>
+          <Link href={"/orpheus/profil/ganti-password"}>
             <MenuItem>
               <Flex alignItems="center" gap=".5rem">
                 <FiEdit />

@@ -42,7 +42,7 @@ const TanyaPR = () => {
   }
 
   return (
-    <AkaLayout title="Tanya PR" activeKey="Tanya PR">
+    <AkaLayout title="Tanya Soal" activeKey="Tanya Soal">
       <Flex
         position="sticky"
         top="-7.5rem"

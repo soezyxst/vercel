@@ -82,7 +82,7 @@ const Id = () => {
 
   if (isLoading) {
     return (
-      <AkaLayout title="Tanya PR" activeKey="">
+      <AkaLayout title="Tanya Soal" activeKey="">
         <Flex justifyContent="center">
           <Spinner mr=".5rem" />
           Memuat data...
@@ -93,7 +93,7 @@ const Id = () => {
 
   if (isError) {
     return (
-      <AkaLayout title="Tanya PR" activeKey="">
+      <AkaLayout title="Tanya Soal" activeKey="">
         <Flex justifyContent="center">
           <Text>Terjadi kesalahan</Text>
         </Flex>
@@ -102,7 +102,7 @@ const Id = () => {
   }
 
   return (
-    <AkaLayout title="Tanya PR" activeKey="">
+    <AkaLayout title="Tanya Soal" activeKey="">
       <VStack spacing="1rem" align="strecth">
         <Heading textTransform="capitalize" fontSize="xl">
           {data?.title}

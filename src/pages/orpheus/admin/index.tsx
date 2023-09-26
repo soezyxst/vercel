@@ -33,14 +33,14 @@ const Admin = () => {
           "Informasi",
           "Kegiatan Angkatan",
           "Link Penting",
-          "Tanya PR",
+          "Tanya Soal",
           "Ujian",
           "User",
         ].map((item, index) => (
           <Flex alignItems="center" key={index} gap=".5rem">
             {icons[index]}
             <Link
-              href={`/ms22/admin/${item.toLowerCase().replace(/\s/g, "-")}`}
+              href={`/orpheus/admin/${item.toLowerCase().replace(/\s/g, "-")}`}
             >
               {item}
             </Link>
@@ -54,6 +54,6 @@ const Admin = () => {
 Admin.auth = {
   role: Role.ADMIN || Role.SUPERADMIN,
   loading: <LoadingPage />,
-  unauthorized: "/ms22",
+  unauthorized: "/orpheus",
 };
 export default Admin;

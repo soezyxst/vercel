@@ -86,7 +86,7 @@ const TanyaPR = () => {
 TanyaPR.auth = {
   role: Role.ADMIN || Role.SUPERADMIN,
   loading: <LoadingPage />,
-  unauthorized: "/ms22",
+  unauthorized: "/orpheus",
 };
 
 export default TanyaPR;

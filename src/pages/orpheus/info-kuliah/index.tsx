@@ -39,7 +39,7 @@ const InfoKuliah = () => {
           return (
             <Link
               key={index}
-              href={"/ms22/info-kuliah/mata-kuliah/" + subject.toLowerCase()}
+              href={"/orpheus/info-kuliah/mata-kuliah/" + subject.toLowerCase()}
               _hover={{
                 textDecoration: "none",
               }}

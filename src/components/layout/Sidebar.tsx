@@ -62,10 +62,10 @@ const Sidebar = ({ activeKey }: { activeKey?: string }) => {
         "Kegiatan Angkatan",
         "Info Kuliah",
         "Link Penting",
-        "Tanya PR",
+        "Tanya Soal",
         "Ujian",
       ].map((item, index) => (
-        <Link href={"/ms22/" + urlConverter(item)} key={index}>
+        <Link href={"/orpheus/" + urlConverter(item)} key={index}>
           <Button
             width="100%"
             justifyContent="left"
@@ -103,7 +103,7 @@ const Sidebar = ({ activeKey }: { activeKey?: string }) => {
       ))}
       {(session?.user.role === Role.ADMIN ||
         session?.user.role === Role.SUPERADMIN) && (
-          <Link href={`/ms22/${urlConverter("admin")}`}>
+          <Link href={`/orpheus/${urlConverter("admin")}`}>
             <Button
               width="100%"
               justifyContent="left"

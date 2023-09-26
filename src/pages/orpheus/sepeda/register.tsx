@@ -85,7 +85,7 @@ const RegisterSepeda = () => {
         nim: data.nim,
         bike: data.bike,
         link:
-          "https://soezyxst.me/ms22/sepeda/user/verify/" + token.data?.token,
+          "https://soezyxst.me/orpheus/sepeda/user/verify/" + token.data?.token,
         password: data.password,
       }),
     })
@@ -109,7 +109,7 @@ const RegisterSepeda = () => {
           duration: 1500,
         });
       });
-    void router.push("/ms22/sepeda/login");
+    void router.push("/orpheus/sepeda/login");
     reset();
   };
 
